@@ -1,6 +1,6 @@
 .gradle
 .idea
-black-jack-spring.iml
+*.iml
 build
 lib
 startup.log
