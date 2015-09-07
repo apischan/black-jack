@@ -11,9 +11,14 @@ import com.apischanskyi.blackjack.service.declaration.BetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 
 import static com.apischanskyi.blackjack.entity.Round.RoundState;
 
+@Service
+@Transactional
 public class GameServiceImpl implements GameService {
 
     private static final Logger logger = LoggerFactory.getLogger(GameServiceImpl.class);
