@@ -1,0 +1,8 @@
+.gradle
+.idea
+black-jack-spring.iml
+build
+lib
+startup.log
+src/test/resources/trash/
+
