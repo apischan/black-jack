@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"com.apischanskyi.spring.blackjack"})
+@ComponentScan(basePackages = {"com.apischanskyi.blackjack"})
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

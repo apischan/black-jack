@@ -21,10 +21,9 @@ import java.util.Properties;
 
 @Profile("prod")
 @Configuration
-@ComponentScan("com.apischanskyi.spring.blackjack")
+@ComponentScan("com.apischanskyi.blackjack")
 @EnableTransactionManagement
 @PropertySource("classpath:application.properties")
-@Import(CustomBeansConfig.class)
 public class AppConfig {
 
     @Autowired

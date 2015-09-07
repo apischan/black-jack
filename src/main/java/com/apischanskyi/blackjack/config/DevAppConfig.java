@@ -23,10 +23,9 @@ import java.util.Properties;
 
 @Profile("dev")
 @Configuration
-@ComponentScan("com.apischanskyi.spring.blackjack")
+@ComponentScan("com.apischanskyi.blackjack")
 @EnableTransactionManagement
 @PropertySource("classpath:dev.application.properties")
-@Import(CustomBeansConfig.class)
 public class DevAppConfig {
 
     @Autowired

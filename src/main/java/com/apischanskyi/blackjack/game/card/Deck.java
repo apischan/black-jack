@@ -4,6 +4,8 @@ import com.apischanskyi.blackjack.entity.Card;
 
 import java.util.*;
 
+import static com.apischanskyi.blackjack.entity.Card.*;
+
 public class Deck {
 
     private Stack<Card> deckHolder = new Stack<>();
