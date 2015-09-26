@@ -33,6 +33,9 @@ public interface Constants {
         String BET_CONTROLLER_ROOT = "/game/{playerId}";
         String BET = "/bet";
         String CANCEL_BET = "/bet/{roundId}/cancel";
+
+        String GAME_STATISTICS_ROOT = "/statistics";
+        String ROUND_STATISTICS = "/round/{roundId}";
     }
 
 }
