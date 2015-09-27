@@ -20,7 +20,7 @@ public class User implements Serializable {
     @Column(name = "balance")
     private Long balance;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private Set<Round> rounds;
 
     public Long getId() {

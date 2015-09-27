@@ -1,11 +1,14 @@
 package com.apischanskyi.blackjack.game;
 
 import com.apischanskyi.blackjack.entity.Card;
+import com.apischanskyi.blackjack.entity.CardLog;
 import com.apischanskyi.blackjack.entity.Round;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
+import static com.apischanskyi.blackjack.entity.CardLog.PlayerRole;
+import static com.apischanskyi.blackjack.entity.Round.RoundState;
 
 public class Deal {
 
@@ -13,11 +16,13 @@ public class Deal {
 
     private Long bet;
 
-    private final List<Card> playerCards = new ArrayList<>();
+    @JsonIgnore
+    private final Map<PlayerRole, LinkedList<Card>> roundCards = new HashMap<PlayerRole, LinkedList<Card>>() {{
+        put(PlayerRole.DEALER, new LinkedList<>());
+        put(PlayerRole.PLAYER, new LinkedList<>());
+    }};
 
-    private final List<Card> dealerCards = new ArrayList<>();
-
-    private Round.RoundState state;
+    private RoundState state;
 
     public Deal(Long roundId, Long bet) {
         this.roundId = roundId;
@@ -25,11 +30,11 @@ public class Deal {
     }
 
     public void addPlayerCards(Card ... cards) {
-        playerCards.addAll(Arrays.asList(cards));
+        getPlayerCards().addAll(Arrays.asList(cards));
     }
 
     public void addDealerCards(Card ... cards) {
-        dealerCards.addAll(Arrays.asList(cards));
+        getDealerCards().addAll(Arrays.asList(cards));
     }
 
     public Long getRoundId() {
@@ -40,29 +45,33 @@ public class Deal {
         return bet;
     }
 
+    public Map<PlayerRole, LinkedList<Card>> getRoundCards() {
+        return roundCards;
+    }
+
     public List<Card> getPlayerCards() {
-        return playerCards;
+        return roundCards.get(PlayerRole.PLAYER);
     }
 
     public List<Card> getDealerCards() {
-        return dealerCards;
+        return roundCards.get(PlayerRole.DEALER);
     }
 
-    public Round.RoundState getState() {
+    public RoundState getState() {
         return state;
     }
 
     public Deal hideDealerCard() {
         Deal hiddenDeal = new Deal(roundId, bet);
-        hiddenDeal.addPlayerCards(playerCards.toArray(new Card[playerCards.size()]));
-        hiddenDeal.addDealerCards(dealerCards.get(0), Card.getHiddenCard());
+        hiddenDeal.addPlayerCards(getPlayerCards().toArray(new Card[getPlayerCards().size()]));
+        hiddenDeal.addDealerCards(getDealerCards().get(0), Card.getHiddenCard());
         hiddenDeal.state = state;
         hiddenDeal.roundId = roundId;
         hiddenDeal.bet = bet;
         return hiddenDeal;
     }
 
-    public void setRoundState(Round.RoundState state) {
+    public void setRoundState(RoundState state) {
         this.state = state;
     }
 }

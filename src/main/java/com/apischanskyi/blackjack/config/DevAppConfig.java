@@ -60,7 +60,6 @@ public class DevAppConfig {
 
     @Bean
     public DataSource dataSource() {
-        System.out.println("building datasource");
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.HSQL)
                 .addScript("classpath:dev/sql/schema.sql")

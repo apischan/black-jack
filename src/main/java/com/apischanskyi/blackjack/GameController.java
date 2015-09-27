@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
+import static com.apischanskyi.blackjack.Constants.SiteConstants;
+
 @RestController
-@RequestMapping(value = Constants.SiteConstants.GAME_CONTROLLER_ROOT
+@RequestMapping(value = SiteConstants.GAME_CONTROLLER_ROOT
         , produces = MediaType.APPLICATION_JSON_VALUE
         , consumes = MediaType.APPLICATION_JSON_VALUE)
 public class GameController {
@@ -23,7 +25,7 @@ public class GameController {
     @Autowired
     private GameService gameService;
 
-    @RequestMapping(value = Constants.SiteConstants.DEAL, method = RequestMethod.POST)
+    @RequestMapping(value = SiteConstants.DEAL, method = RequestMethod.POST)
     public Deal deal(@PathVariable("playerId") long playerId, @PathVariable("roundId") long gameId,
                      HttpSession session) {
         logger.info("Player id: {}; roundId: {}", playerId, gameId);
@@ -32,7 +34,7 @@ public class GameController {
         return gameState.getDeal().hideDealerCard();
     }
 
-    @RequestMapping(value = Constants.SiteConstants.HIT, method = RequestMethod.POST)
+    @RequestMapping(value = SiteConstants.HIT, method = RequestMethod.POST)
     public Deal hit(@PathVariable("playerId") long playerId, @PathVariable("roundId") long gameId,
                     HttpSession session) {
         logger.info("Player id: {}; roundId: {}", playerId, gameId);
@@ -42,7 +44,7 @@ public class GameController {
         return gameState.getDeal().hideDealerCard();
     }
 
-    @RequestMapping(value = Constants.SiteConstants.STAND, method = RequestMethod.POST)
+    @RequestMapping(value = SiteConstants.STAND, method = RequestMethod.POST)
     public Deal stand(@PathVariable("playerId") long playerId, @PathVariable("roundId") long gameId,
                     HttpSession session) {
         logger.info("Player id: {}; roundId: {}", playerId, gameId);
@@ -52,7 +54,7 @@ public class GameController {
         return newState.getDeal();
     }
 
-    @RequestMapping(value = Constants.SiteConstants.RESULT, method = RequestMethod.POST)
+    @RequestMapping(value = SiteConstants.RESULT, method = RequestMethod.POST)
     public Deal result(HttpSession session) {
         GameState gameState = (GameState) session.getAttribute(ROUND_STATE);
         if (gameState == null) {
