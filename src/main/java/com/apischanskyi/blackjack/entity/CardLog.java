@@ -14,13 +14,23 @@ public class CardLog implements Serializable {
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "player_role")
     private PlayerRole playerRole;
 
     @Embedded
     private Card card;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "round_id", nullable = false)
     private Round round;
+
+    public CardLog() {}
+
+    public CardLog(PlayerRole playerRole, Card card, Round round) {
+        this.playerRole = playerRole;
+        this.card = card;
+        this.round = round;
+    }
 
     public Long getId() {
         return id;

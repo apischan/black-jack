@@ -8,6 +8,7 @@ import com.apischanskyi.blackjack.entity.Round;
 import com.apischanskyi.blackjack.game.Deal;
 import com.apischanskyi.blackjack.game.logic.GameLogic;
 import com.apischanskyi.blackjack.service.declaration.BetService;
+import com.apischanskyi.blackjack.service.declaration.StatisticsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class GameServiceImpl implements GameService {
     @Autowired
     private BetService betService;
 
+    @Autowired
+    private StatisticsService statisticsService;
+
     /**
      * {@inheritDoc}
      */
@@ -49,6 +53,7 @@ public class GameServiceImpl implements GameService {
         } else {
             roundState = RoundState.IN_PROGRESS;
         }
+        statisticsService.logCards(round, deal);
         applyRoundState(gameState, round, roundState, playerId);
         return gameState;
     }
@@ -58,6 +63,7 @@ public class GameServiceImpl implements GameService {
      */
     public GameState hit(GameState gameState, long playerId, long roundId) {
         Round round = roundDao.getRound(roundId);
+        logger.info("Cards during the round: [{}]", round.getCardLogs().size());
         if (round.getStatus() != RoundState.IN_PROGRESS) {
             logger.info("Game status is: {}", round.getStatus());
             throw BlackJackExceptionHelper.newBlackJackException(BlackJackExceptionHelper.ErrorCode.HIT_IS_NOT_ALLOWED_HERE);

@@ -13,4 +13,6 @@ public interface RoundDao {
     void changeRoundState(Round round, Round.RoundState roundState);
 
     List<Round> getUserRounds(long playerId, Round.RoundState... states);
+
+    void update(Round round);
 }

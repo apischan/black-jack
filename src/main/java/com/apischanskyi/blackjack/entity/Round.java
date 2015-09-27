@@ -2,6 +2,8 @@ package com.apischanskyi.blackjack.entity;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "round")
@@ -24,12 +26,20 @@ public class Round implements Serializable {
     @Column(name = "bet")
     private Long bet;
 
+    @Column(name = "round_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date roundDate;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "round")
+    public Set<CardLog> cardLogs;
+
     public Round() {}
 
     public Round(User user, Long bet) {
         this.user = user;
         this.bet = bet;
         this.status = RoundState.READY;
+        this.roundDate = new Date();
     }
 
     public Long getId() {
@@ -62,6 +72,22 @@ public class Round implements Serializable {
 
     public void setBet(Long bet) {
         this.bet = bet;
+    }
+
+    public Set<CardLog> getCardLogs() {
+        return cardLogs;
+    }
+
+    public void setCardLogs(Set<CardLog> cardLogs) {
+        this.cardLogs = cardLogs;
+    }
+
+    public Date getRoundDate() {
+        return roundDate;
+    }
+
+    public void setRoundDate(Date roundDate) {
+        this.roundDate = roundDate;
     }
 
     public enum RoundState {

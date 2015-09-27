@@ -47,4 +47,10 @@ public class HibernateRoundDao implements RoundDao {
         criteria.add(Restrictions.eq("user.id", playerId));
         return criteria.list();
     }
+
+    @Override
+    public void update(Round round) {
+        hibernateTemplate.update(round);
+    }
+
 }

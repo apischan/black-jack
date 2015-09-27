@@ -22,6 +22,7 @@ CREATE TABLE round
   user_id integer NOT NULL,
   bet bigint,
   status character(20),
+  round_date TIMESTAMP,
   CONSTRAINT round_pkey PRIMARY KEY (id)
 );
 
@@ -44,11 +45,13 @@ CREATE SEQUENCE round_id_seq START WITH 2 INCREMENT BY 1;
 CREATE TABLE card_log
 (
   id integer NOT NULL,
-  game_id integer,
+  round_id integer,
   player_role character(20),
   rank character(20),
   suit character(20),
-  CONSTRAINT card_log_pkey PRIMARY KEY (id)
+  CONSTRAINT card_log_pkey PRIMARY KEY (id),
+  CONSTRAINT round_id_fkey FOREIGN KEY (round_id)
+      REFERENCES round (id)
 );
 
 CREATE SEQUENCE card_log_id_seq START WITH 2 INCREMENT BY 1;
