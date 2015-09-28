@@ -75,8 +75,10 @@ public class GameLogic {
      * @return amount of points for given combination
      */
     private int calculatePoints(List<Card> cards) {
-        return cards.stream().sorted(new CardComparator())
-                .collect(CardConsumer::new, CardConsumer::accept, (cons1, cons2)-> {}).sum;
+        return cards.stream().sorted(
+                (card, card1) -> card1.getRank() == Card.Rank.ACE ? 1 : -1)
+                .collect(CardConsumer::new, CardConsumer::accept, (cons1, cons2) -> {
+                }).sum;
     }
 
     /**
@@ -130,17 +132,6 @@ public class GameLogic {
             throw BlackJackExceptionHelper.newBlackJackException(BlackJackExceptionHelper.ErrorCode.INCOMPATIBLE_GAME_STATE);
         }
 
-    }
-
-    /**
-     * Aces last in sequence
-     */
-    @SuppressWarnings("ComparatorMethodParameterNotUsed")
-    static class CardComparator implements Comparator<Card> {
-        @Override
-        public int compare(Card card1, Card card2) {
-            return card1.getRank() == Card.Rank.ACE ? 1 : -1;
-        }
     }
 
     private class CardConsumer implements Consumer<Card> {
