@@ -12,6 +12,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.*;
 
+import static com.apischanskyi.blackjack.entity.Card.Rank;
+import static com.apischanskyi.blackjack.entity.Round.RoundState;
+import static com.apischanskyi.blackjack.exceptions.BlackJackExceptionHelper.ErrorCode;
+
 @Component
 public class GameLogic {
 
@@ -60,7 +64,7 @@ public class GameLogic {
      *
      * @param gameState state of game
      */
-    public Round.RoundState judge(GameState gameState) {
+    public RoundState judge(GameState gameState) {
         Deal deal = gameState.getDeal();
         int playerPoints = calculatePoints(deal.getPlayerCards());
         int dealerPoints = calculatePoints(deal.getDealerCards());
@@ -76,7 +80,7 @@ public class GameLogic {
      */
     private int calculatePoints(List<Card> cards) {
         return cards.stream().sorted(
-                (card, card1) -> card1.getRank() == Card.Rank.ACE ? 1 : -1)
+                (card, card1) -> card1.getRank() == Rank.ACE ? 1 : -1)
                 .collect(CardConsumer::new, CardConsumer::accept, (cons1, cons2) -> {
                 }).sum;
     }
@@ -111,25 +115,25 @@ public class GameLogic {
      * Performs judgment
      */
     private enum GameJudge {
-        PUSH(Integer::equals, Round.RoundState.PUSH),
-        WIN((playerPoints, dealerPoints) -> playerPoints > dealerPoints || dealerPoints > BLACK_JACK, Round.RoundState.WIN),
-        LOOSE((playerPoints, dealerPoints) -> playerPoints < dealerPoints && dealerPoints <= BLACK_JACK, Round.RoundState.LOOSE);
+        PUSH(Integer::equals, RoundState.PUSH),
+        WIN((playerPoints, dealerPoints) -> playerPoints > dealerPoints || dealerPoints > BLACK_JACK, RoundState.WIN),
+        LOOSE((playerPoints, dealerPoints) -> playerPoints < dealerPoints && dealerPoints <= BLACK_JACK, RoundState.LOOSE);
 
         BiPredicate<Integer, Integer> predicate;
-        Round.RoundState roundState;
+        RoundState roundState;
 
-        GameJudge(BiPredicate<Integer, Integer> predicate, Round.RoundState roundState) {
+        GameJudge(BiPredicate<Integer, Integer> predicate, RoundState roundState) {
             this.predicate = predicate;
             this.roundState = roundState;
         }
 
-        private static Round.RoundState test(int playerPoints, int dealerPoints) {
+        private static RoundState test(int playerPoints, int dealerPoints) {
             for (GameJudge judge : values()) {
                 if (judge.predicate.test(playerPoints, dealerPoints)) {
                     return judge.roundState;
                 }
             }
-            throw BlackJackExceptionHelper.newBlackJackException(BlackJackExceptionHelper.ErrorCode.INCOMPATIBLE_GAME_STATE);
+            throw BlackJackExceptionHelper.newBlackJackException(ErrorCode.INCOMPATIBLE_GAME_STATE);
         }
 
     }
@@ -140,8 +144,8 @@ public class GameLogic {
 
         @Override
         public void accept(Card card) {
-            Card.Rank rank = card.getRank();
-            if (rank == Card.Rank.ACE && sum > 10) {
+            Rank rank = card.getRank();
+            if (rank == Rank.ACE && sum > 10) {
                 sum += rank.getAlterCost();
             } else {
                 sum += rank.getCost();
