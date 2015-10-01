@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.*;
@@ -23,13 +24,15 @@ public class GameLogic {
 
     public static final int BLACK_JACK = 21;
 
+    private static final Comparator<Card> cardComparator = (card, card1) -> card1.getRank() == Rank.ACE ? 1 : -1;
+
     /**
      * Check Black-Jack combination
      *
      * @param cards set of player cards
      * @return true if player reach Black-Jack combination and false otherwise
      */
-    public boolean isBlackJackCombination(List<Card> cards) {
+    public boolean isBlackJackCombination(Collection<Card> cards) {
         return calculatePoints(cards) == BLACK_JACK;
     }
 
@@ -39,7 +42,7 @@ public class GameLogic {
      * @param cards set of player cards
      * @return true if player boosted and false otherwise
      */
-    public boolean isBoosted(List<Card> cards) {
+    public boolean isBoosted(Collection<Card> cards) {
         return calculatePoints(cards) > BLACK_JACK;
     }
 
@@ -78,11 +81,9 @@ public class GameLogic {
      * @param cards set of cards
      * @return amount of points for given combination
      */
-    private int calculatePoints(List<Card> cards) {
-        return cards.stream().sorted(
-                (card, card1) -> card1.getRank() == Rank.ACE ? 1 : -1)
-                .collect(CardConsumer::new, CardConsumer::accept, (cons1, cons2) -> {
-                }).sum;
+    private int calculatePoints(Collection<Card> cards) {
+        return cards.stream().sorted(cardComparator)
+                .collect(CardConsumer::new, CardConsumer::accept, (cons1, cons2)-> {}).sum;
     }
 
     /**

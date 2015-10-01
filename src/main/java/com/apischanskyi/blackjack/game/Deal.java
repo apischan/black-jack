@@ -1,8 +1,6 @@
 package com.apischanskyi.blackjack.game;
 
 import com.apischanskyi.blackjack.entity.Card;
-import com.apischanskyi.blackjack.entity.CardLog;
-import com.apischanskyi.blackjack.entity.Round;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.*;
@@ -12,15 +10,15 @@ import static com.apischanskyi.blackjack.entity.Round.RoundState;
 
 public class Deal {
 
+    @JsonIgnore
+    private final Map<PlayerRole, LinkedHashSet<Card>> roundCards = new HashMap<PlayerRole, LinkedHashSet<Card>>() {{
+        put(PlayerRole.DEALER, new LinkedHashSet<>());
+        put(PlayerRole.PLAYER, new LinkedHashSet<>());
+    }};
+
     private Long roundId;
 
     private Long bet;
-
-    @JsonIgnore
-    private final Map<PlayerRole, LinkedList<Card>> roundCards = new HashMap<PlayerRole, LinkedList<Card>>() {{
-        put(PlayerRole.DEALER, new LinkedList<>());
-        put(PlayerRole.PLAYER, new LinkedList<>());
-    }};
 
     private RoundState state;
 
@@ -45,15 +43,15 @@ public class Deal {
         return bet;
     }
 
-    public Map<PlayerRole, LinkedList<Card>> getRoundCards() {
+    public Map<PlayerRole, LinkedHashSet<Card>> getRoundCards() {
         return roundCards;
     }
 
-    public List<Card> getPlayerCards() {
+    public Set<Card> getPlayerCards() {
         return roundCards.get(PlayerRole.PLAYER);
     }
 
-    public List<Card> getDealerCards() {
+    public Set<Card> getDealerCards() {
         return roundCards.get(PlayerRole.DEALER);
     }
 
@@ -64,7 +62,7 @@ public class Deal {
     public Deal hideDealerCard() {
         Deal hiddenDeal = new Deal(roundId, bet);
         hiddenDeal.addPlayerCards(getPlayerCards().toArray(new Card[getPlayerCards().size()]));
-        hiddenDeal.addDealerCards(getDealerCards().get(0), Card.getHiddenCard());
+        hiddenDeal.addDealerCards(getDealerCards().iterator().next(), Card.getHiddenCard());
         hiddenDeal.state = state;
         hiddenDeal.roundId = roundId;
         hiddenDeal.bet = bet;
@@ -74,4 +72,5 @@ public class Deal {
     public void setRoundState(RoundState state) {
         this.state = state;
     }
+
 }

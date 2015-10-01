@@ -86,4 +86,20 @@ public class Card implements Serializable {
                 ", rank=" + rank +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Card card = (Card) o;
+        return rank == card.rank && suit == card.suit;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = suit.hashCode();
+        result = 31 * result + rank.hashCode();
+        return result;
+    }
 }
