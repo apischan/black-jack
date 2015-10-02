@@ -19,6 +19,8 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.Properties;
 
+import static com.apischanskyi.blackjack.Constants.HibernateConstants;
+
 @Profile("prod")
 @Configuration
 @ComponentScan("com.apischanskyi.blackjack")
@@ -58,20 +60,20 @@ public class AppConfig {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty(Constants.HibernateConstants.HIBERNATE_DRIVER_PROP_NAME));
-        dataSource.setUrl(env.getProperty(Constants.HibernateConstants.HIBERNATE_DB_URL_PROP_NAME));
-        dataSource.setUsername(env.getProperty(Constants.HibernateConstants.HIBERNATE_DB_USERNAME_PROP_NAME));
-        dataSource.setPassword(env.getProperty(Constants.HibernateConstants.HIBERNATE_DB_PASSWORD_PROP_NAME));
+        dataSource.setDriverClassName(env.getProperty(HibernateConstants.HIBERNATE_DRIVER_PROP_NAME));
+        dataSource.setUrl(env.getProperty(HibernateConstants.HIBERNATE_DB_URL_PROP_NAME));
+        dataSource.setUsername(env.getProperty(HibernateConstants.HIBERNATE_DB_USERNAME_PROP_NAME));
+        dataSource.setPassword(env.getProperty(HibernateConstants.HIBERNATE_DB_PASSWORD_PROP_NAME));
         return dataSource;
     }
 
     @Bean
     public Properties hibernateProperties() {
         Properties properties = new Properties();
-        properties.setProperty(Constants.HibernateConstants.HIBERNATE_DIALECT,
-                env.getProperty(Constants.HibernateConstants.HIBERNATE_DIALECT_PROP_NAME));
-        properties.setProperty(Constants.HibernateConstants.HIBERNATE_SHOW_SQL,
-                env.getProperty(Constants.HibernateConstants.HIBERNATE_SHOW_SQL_PROP_NAME));
+        properties.setProperty(HibernateConstants.HIBERNATE_DIALECT,
+                env.getProperty(HibernateConstants.HIBERNATE_DIALECT_PROP_NAME));
+        properties.setProperty(HibernateConstants.HIBERNATE_SHOW_SQL,
+                env.getProperty(HibernateConstants.HIBERNATE_SHOW_SQL_PROP_NAME));
 //        properties.setProperty(HibernateConstants.HIBERNATE_HBM2DDL_AUTO_PROP_NAME,
 //                env.getProperty(HibernateConstants.HIBERNATE_HBM2DDL_AUTO_PROP_NAME));
         return properties;

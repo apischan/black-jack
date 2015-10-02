@@ -9,6 +9,8 @@ import org.hsqldb.util.DatabaseManagerSwing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -25,7 +27,7 @@ import java.util.Properties;
 @Configuration
 @ComponentScan("com.apischanskyi.blackjack")
 @EnableTransactionManagement
-@PropertySource("classpath:dev.application.properties")
+@PropertySource(value = {"classpath:dev.application.properties"})
 public class DevAppConfig {
 
     @Autowired
@@ -68,15 +70,8 @@ public class DevAppConfig {
     }
 
     @Bean
-    public Properties hibernateProperties() {
-        Properties properties = new Properties();
-        properties.setProperty(HibernateConstants.HIBERNATE_DIALECT,
-                env.getProperty(HibernateConstants.HIBERNATE_DIALECT_PROP_NAME));
-        properties.setProperty(HibernateConstants.HIBERNATE_SHOW_SQL,
-                env.getProperty(HibernateConstants.HIBERNATE_SHOW_SQL_PROP_NAME));
-//        properties.setProperty(HibernateConstants.HIBERNATE_HBM2DDL_AUTO_PROP_NAME,
-//                env.getProperty(HibernateConstants.HIBERNATE_HBM2DDL_AUTO_PROP_NAME));
-        return properties;
+    public Properties hibernateProperties() throws IOException {
+        return PropertiesLoaderUtils.loadProperties(new ClassPathResource("dev.hibernate.properties"));
     }
 
     @Bean

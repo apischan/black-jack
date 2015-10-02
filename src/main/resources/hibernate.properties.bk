@@ -2,5 +2,6 @@ hibernate.driver=org.postgresql.Driver
 hibernate.db.url=jdbc:postgresql://localhost:5432/black_jack
 hibernate.username=apischanskyi
 hibernate.password=apischanskyi
-hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 hibernate.show_sql=true
+hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+hibernate.hbm2ddl.auto=create-drop
