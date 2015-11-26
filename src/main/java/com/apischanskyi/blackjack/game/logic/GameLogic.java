@@ -1,17 +1,18 @@
 package com.apischanskyi.blackjack.game.logic;
 
 import com.apischanskyi.blackjack.entity.Card;
-import com.apischanskyi.blackjack.entity.Round;
 import com.apischanskyi.blackjack.exceptions.BlackJackExceptionHelper;
-import com.apischanskyi.blackjack.game.Deal;
+import com.apischanskyi.blackjack.game.Table;
+import com.apischanskyi.blackjack.game.TableContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
-import java.util.function.*;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
 
 import static com.apischanskyi.blackjack.entity.Card.Rank;
 import static com.apischanskyi.blackjack.entity.Round.RoundState;
@@ -22,9 +23,12 @@ public class GameLogic {
 
     private static final Logger logger = LoggerFactory.getLogger(GameLogic.class);
 
+    @Autowired
+    private TableContainer tableContainer;
+
     public static final int BLACK_JACK = 21;
 
-    private static final Comparator<Card> cardComparator = (card, card1) -> card1.getRank() == Rank.ACE ? 1 : -1;
+    private static final Comparator<Card> cardComparator = (card, card1) -> card1.getRank() == Rank.ACE ? -1 : 1;
 
     /**
      * Check Black-Jack combination
@@ -49,28 +53,28 @@ public class GameLogic {
     /**
      * Performs dealers actions
      *
-     * @param gameState state of game
+     * @param table state of game
      */
-    public void dealerPlay(GameState gameState) {
-        Deal deal = gameState.getDeal();
-        int playerPoints = calculatePoints(deal.getPlayerCards());
-        int dealerPoints = calculatePoints(deal.getDealerCards());
-        while ((dealerNeedMoreCards(dealerPoints) && dealerShouldRisk(playerPoints)) || playerHaveMore(dealerPoints, playerPoints)) {
+    public void dealerPlay(Table table) {
+        int playerPoints = calculatePoints(table.getPlayerCards());
+        int dealerPoints = calculatePoints(table.getDealerCards());
+        Dealer dealer = new Dealer(table);
+        while ((dealerNeedMoreCards(dealerPoints) && dealerShouldRisk(playerPoints))
+                || playerHaveMore(dealerPoints, playerPoints)) {
             logger.info("Dealer points: {}; Player points: {}", dealerPoints, playerPoints);
-            gameState.hitDealer();
-            dealerPoints = calculatePoints(deal.getDealerCards());
+            dealer.hitDealer();
+            dealerPoints = calculatePoints(table.getDealerCards());
         }
     }
 
     /**
      * Determine and set the result of round
      *
-     * @param gameState state of game
+     * @param table state of game
      */
-    public RoundState judge(GameState gameState) {
-        Deal deal = gameState.getDeal();
-        int playerPoints = calculatePoints(deal.getPlayerCards());
-        int dealerPoints = calculatePoints(deal.getDealerCards());
+    public RoundState judge(Table table) {
+        int playerPoints = calculatePoints(table.getPlayerCards());
+        int dealerPoints = calculatePoints(table.getDealerCards());
         logger.info("Dealer points: {}; Player points: {}", dealerPoints, playerPoints);
         return GameJudge.test(playerPoints, dealerPoints);
     }
@@ -89,15 +93,14 @@ public class GameLogic {
     /**
      * Performs the deal
      *
-     * @param roundId instance ID of round
-     * @param bet amount of bet
-     * @return new {@link GameState}
+     * @param playerId instance ID of round
+     * @return new {@link Table} with dealt cards
      */
-    public GameState deal(long roundId, Long bet) {
-        Deal deal = new Deal(roundId, bet);
-        GameState gameState = new GameState(deal);
-        gameState.deal();
-        return gameState;
+    public Table deal(long playerId) {
+        Table table = tableContainer.getTable(playerId);
+        Dealer dealer = new Dealer(table);
+        dealer.deal();
+        return table;
     }
 
     private boolean dealerShouldRisk(int playerPoints) {

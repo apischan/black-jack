@@ -1,10 +1,7 @@
 package com.apischanskyi.blackjack.service.declaration;
 
-import com.apischanskyi.blackjack.game.logic.GameState;
 import com.apischanskyi.blackjack.exceptions.BlackJackException;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import com.apischanskyi.blackjack.game.Table;
 
 public interface BetService {
 
@@ -21,10 +18,10 @@ public interface BetService {
     /**
      * Make the payment by results of hte round
      *
-     * @param gameState contains bet and state of round
+     * @param table contains bet and state of round
      * @param userId instance id of user
      */
-    void pay(GameState gameState, long userId);
+    void pay(Table table, long userId);
 
     /**
      * Cancels existing bet

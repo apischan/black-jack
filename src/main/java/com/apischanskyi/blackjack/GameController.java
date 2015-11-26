@@ -1,14 +1,16 @@
 package com.apischanskyi.blackjack;
 
 import com.apischanskyi.blackjack.exceptions.BlackJackExceptionHelper;
-import com.apischanskyi.blackjack.game.logic.GameState;
+import com.apischanskyi.blackjack.game.Table;
 import com.apischanskyi.blackjack.service.declaration.GameService;
-import com.apischanskyi.blackjack.game.Deal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
 
@@ -26,43 +28,44 @@ public class GameController {
     private GameService gameService;
 
     @RequestMapping(value = SiteConstants.DEAL, method = RequestMethod.POST)
-    public Deal deal(@PathVariable("playerId") long playerId, @PathVariable("roundId") long gameId,
+    public Table deal(@PathVariable("playerId") long playerId, @PathVariable("roundId") long gameId,
                      HttpSession session) {
         logger.info("Player id: {}; roundId: {}", playerId, gameId);
-        GameState gameState = gameService.deal(playerId, gameId);
-        session.setAttribute(ROUND_STATE, gameState);
-        return gameState.getDeal().hideDealerCard();
+        Table table = gameService.deal(playerId, gameId);
+        session.setAttribute(ROUND_STATE, table);
+        return table.hideDealerCard();
+//        System.out.println("World!!");
+//        return new Table(0L, 0L);
     }
-
     @RequestMapping(value = SiteConstants.HIT, method = RequestMethod.POST)
-    public Deal hit(@PathVariable("playerId") long playerId, @PathVariable("roundId") long gameId,
+    public Table hit(@PathVariable("playerId") long playerId, @PathVariable("roundId") long gameId,
                     HttpSession session) {
         logger.info("Player id: {}; roundId: {}", playerId, gameId);
-        GameState gameState = (GameState) session.getAttribute(ROUND_STATE);
-        GameState newGameState = gameService.hit(gameState, playerId, gameId);
-        session.setAttribute(ROUND_STATE, newGameState);
-        return gameState.getDeal().hideDealerCard();
+        Table table = (Table) session.getAttribute(ROUND_STATE);
+        Table newTable = gameService.hit(table, playerId, gameId);
+        session.setAttribute(ROUND_STATE, newTable);
+        return table.hideDealerCard();
     }
 
     @RequestMapping(value = SiteConstants.STAND, method = RequestMethod.POST)
-    public Deal stand(@PathVariable("playerId") long playerId, @PathVariable("roundId") long gameId,
+    public Table stand(@PathVariable("playerId") long playerId, @PathVariable("roundId") long gameId,
                     HttpSession session) {
         logger.info("Player id: {}; roundId: {}", playerId, gameId);
-        GameState gameState = (GameState) session.getAttribute(ROUND_STATE);
-        GameState newState = gameService.stand(gameState, playerId, gameId);
+        Table table = (Table) session.getAttribute(ROUND_STATE);
+        Table newState = gameService.stand(table, playerId, gameId);
         session.setAttribute(ROUND_STATE, null);
-        return newState.getDeal();
+        return newState;
     }
 
     @RequestMapping(value = SiteConstants.RESULT, method = RequestMethod.POST)
-    public Deal result(HttpSession session) {
-        GameState gameState = (GameState) session.getAttribute(ROUND_STATE);
-        if (gameState == null) {
+    public Table result(HttpSession session) {
+        Table table = (Table) session.getAttribute(ROUND_STATE);
+        if (table == null) {
             throw BlackJackExceptionHelper.newBlackJackException(BlackJackExceptionHelper.ErrorCode.GAME_NOT_FOUND);
         } else {
             session.setAttribute(ROUND_STATE, null);
         }
-        return gameState.getDeal();
+        return table;
     }
 
 }

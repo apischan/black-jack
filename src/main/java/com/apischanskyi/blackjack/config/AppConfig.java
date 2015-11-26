@@ -1,6 +1,5 @@
 package com.apischanskyi.blackjack.config;
 
-import com.apischanskyi.blackjack.Constants;
 import com.apischanskyi.blackjack.entity.Round;
 import com.apischanskyi.blackjack.entity.CardLog;
 import com.apischanskyi.blackjack.entity.User;
@@ -26,6 +25,7 @@ import static com.apischanskyi.blackjack.Constants.HibernateConstants;
 @ComponentScan("com.apischanskyi.blackjack")
 @EnableTransactionManagement
 @PropertySource("classpath:application.properties")
+@EnableAspectJAutoProxy
 public class AppConfig {
 
     @Autowired

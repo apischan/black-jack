@@ -6,8 +6,7 @@ import com.apischanskyi.blackjack.data.declaration.UserDao;
 import com.apischanskyi.blackjack.entity.Round;
 import com.apischanskyi.blackjack.entity.Round.RoundState;
 import com.apischanskyi.blackjack.entity.User;
-import com.apischanskyi.blackjack.game.Deal;
-import com.apischanskyi.blackjack.game.logic.GameState;
+import com.apischanskyi.blackjack.game.Table;
 import com.apischanskyi.blackjack.service.declaration.BetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,10 +51,9 @@ public class BetServiceImpl implements BetService {
     /**
      * {@inheritDoc}
      */
-    public void pay(GameState gameState, long playerId) {
-        Deal deal = gameState.getDeal();
-        logger.info("Round state is: {} and bet is: {}", deal.getState(), deal.getBet());
-        Long amountToPay = PaymentSolver.calcAmountToPay(deal.getState(), deal.getBet());
+    public void pay(Table table, long playerId) {
+        logger.info("Round state is: {} and bet is: {}", table.getState(), table.getBet());
+        Long amountToPay = PaymentSolver.calcAmountToPay(table.getState(), table.getBet());
         User user = userDao.getUserById(playerId);
         logger.info("Payment: {}", amountToPay);
         user.setBalance(user.getBalance() + amountToPay);

@@ -5,7 +5,7 @@ import com.apischanskyi.blackjack.data.declaration.UserDao;
 import com.apischanskyi.blackjack.entity.Round.RoundState;
 import com.apischanskyi.blackjack.entity.User;
 import com.apischanskyi.blackjack.game.Deal;
-import com.apischanskyi.blackjack.game.logic.GameState;
+import com.apischanskyi.blackjack.game.logic.Table;
 import com.apischanskyi.blackjack.service.BetServiceImpl;
 import org.junit.Before;
 import org.junit.experimental.theories.DataPoints;
@@ -59,11 +59,11 @@ public class BetServiceTheoriesTest {
 
         Deal deal = new Deal(roundId, bet);
         deal.setRoundState(testData.roundState);
-        GameState gameState = mock(GameState.class);
-        doReturn(deal).when(gameState).getDeal();
+        Table table = mock(Table.class);
+        doReturn(deal).when(table).getDeal();
         doReturn(user).when(userDaoMock).getUserById(userId);
 
-        betService.pay(gameState, userId);
+        betService.pay(table, userId);
 
         assertEquals(new Long(1000L + testData.payment), user.getBalance());
     }

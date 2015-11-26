@@ -1,9 +1,6 @@
 package com.apischanskyi.blackjack.service.declaration;
 
-import com.apischanskyi.blackjack.game.logic.GameState;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import com.apischanskyi.blackjack.game.Table;
 
 public interface GameService {
 
@@ -14,25 +11,25 @@ public interface GameService {
      * @param roundId instance ID of round
      * @return state of game after dealing
      */
-    GameState deal(long playerId, long roundId);
+    Table deal(long playerId, long roundId);
 
     /**
      * Performs HIT action
      *
-     * @param gameState state of game
+     * @param table state of game
      * @param playerId instance ID of player
      * @param roundId instance ID of round
      * @return changed state of game after hitting
      */
-    GameState hit(GameState gameState, long playerId, long roundId);
+    Table hit(Table table, long playerId, long roundId);
 
     /**
      * Perform the STAND action
      *
-     * @param gameState state of game
+     * @param table state of game
      * @param playerId instance ID of player
      * @param roundId instance ID of round
      * @return changed state of game after standing
      */
-    GameState stand(GameState gameState, long playerId, long roundId);
+    Table stand(Table table, long playerId, long roundId);
 }

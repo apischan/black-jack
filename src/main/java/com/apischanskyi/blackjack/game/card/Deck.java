@@ -1,16 +1,26 @@
 package com.apischanskyi.blackjack.game.card;
 
 import com.apischanskyi.blackjack.entity.Card;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.*;
 
 import static com.apischanskyi.blackjack.entity.Card.*;
 
+@Component
+@Scope(value = "prototype")
 public class Deck {
 
     private Stack<Card> deckHolder = new Stack<>();
 
-    public Deck() {
+//    public Deck() {}
+
+    @PostConstruct
+    public void init() {
+        System.out.println("HELLO!!!!!!!!!!!!!!!");
         for (Rank rank : Rank.values()) {
             if (rank != Rank.HIDDEN) {
                 for (Suit suit : Suit.values()) {

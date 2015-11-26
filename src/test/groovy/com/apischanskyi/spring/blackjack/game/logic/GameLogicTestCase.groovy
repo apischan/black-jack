@@ -6,7 +6,7 @@ import com.apischanskyi.blackjack.entity.Card.Suit
 import com.apischanskyi.blackjack.entity.Round.RoundState
 import com.apischanskyi.blackjack.game.Deal
 import com.apischanskyi.blackjack.game.logic.GameLogic
-import com.apischanskyi.blackjack.game.logic.GameState
+import com.apischanskyi.blackjack.game.logic.Table
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -72,7 +72,7 @@ class GameLogicTestCase extends Specification {
         def roundId = 1L
         def bet = 10L
         Deal dealMock = Spy(Deal, constructorArgs: [roundId, bet])
-        GameState gameStateMock = Spy(GameState, constructorArgs: [dealMock])
+        Table gameStateMock = Spy(Table, constructorArgs: [dealMock])
         def dealerCards = initDealerCards.collect()
 
         when:
@@ -96,7 +96,7 @@ class GameLogicTestCase extends Specification {
         def bet = 10L
 
         when:
-        GameState gameState = gameLogic.deal(roundId, bet)
+        Table gameState = gameLogic.deal(roundId, bet)
         Deal deal = gameState.getDeal()
 
         then:
@@ -111,7 +111,7 @@ class GameLogicTestCase extends Specification {
         def bet = 10L
 
         when:
-        GameState gameState = gameLogic.deal(roundId, bet)
+        Table gameState = gameLogic.deal(roundId, bet)
         Deal deal = gameState.getDeal()
         Card hiddenCard = deal.hideDealerCard().getDealerCards()[1]
 
@@ -126,7 +126,7 @@ class GameLogicTestCase extends Specification {
         def roundId = 1L
         def bet = 10L
         Deal dealMock = Mock(Deal, constructorArgs: [roundId, bet])
-        GameState gameStateMock = new GameState(dealMock)
+        Table gameStateMock = new Table(dealMock)
 
         when:
         RoundState roundState = gameLogic.judge(gameStateMock)

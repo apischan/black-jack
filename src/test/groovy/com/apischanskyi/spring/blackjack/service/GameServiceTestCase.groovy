@@ -8,7 +8,7 @@ import com.apischanskyi.blackjack.exceptions.BlackJackException
 import com.apischanskyi.blackjack.exceptions.BlackJackExceptionHelper.ErrorCode
 import com.apischanskyi.blackjack.game.Deal
 import com.apischanskyi.blackjack.game.logic.GameLogic
-import com.apischanskyi.blackjack.game.logic.GameState
+import com.apischanskyi.blackjack.game.logic.Table
 import com.apischanskyi.blackjack.service.GameServiceImpl
 import com.apischanskyi.blackjack.service.declaration.BetService
 import com.apischanskyi.blackjack.service.declaration.GameService
@@ -49,10 +49,10 @@ class GameServiceTestCase extends Specification {
         def bet = 10L
         Round round = new Round(id: roundId, status: RoundState.READY, bet: bet);
         Deal dealMock = Spy(Deal, constructorArgs: [roundId, bet])
-        GameState gameStateMock = Mock(GameState, constructorArgs: [dealMock])
+        Table gameStateMock = Mock(Table, constructorArgs: [dealMock])
 
         when:
-        GameState gameStateResult = gameService.deal(userId, roundId)
+        Table gameStateResult = gameService.deal(userId, roundId)
         def gameResult = gameStateResult.getDeal().getState()
 
         then:
@@ -99,7 +99,7 @@ class GameServiceTestCase extends Specification {
         def bet = 10L
         Round round = new Round(status: RoundState.IN_PROGRESS)
         Deal dealMock = Mock(Deal, constructorArgs: [roundId, bet])
-        GameState gameStateMock = Mock(GameState, constructorArgs: [dealMock])
+        Table gameStateMock = Mock(Table, constructorArgs: [dealMock])
 
         when:
         gameService.hit(gameStateMock, userId, roundId)
@@ -118,7 +118,7 @@ class GameServiceTestCase extends Specification {
         def bet = 10L
         Round round = new Round(status: RoundState.IN_PROGRESS)
         Deal dealMock = Mock(Deal, constructorArgs: [roundId, bet])
-        GameState gameStateMock = Mock(GameState, constructorArgs: [dealMock])
+        Table gameStateMock = Mock(Table, constructorArgs: [dealMock])
 
         when:
         gameService.hit(gameStateMock, userId, roundId)
@@ -139,7 +139,7 @@ class GameServiceTestCase extends Specification {
         def roundId = 1L
         def bet = 10L
         Round round = new Round(status: RoundState.READY)
-        GameState gameState = new GameState(new Deal(roundId, bet))
+        Table gameState = new Table(new Deal(roundId, bet))
 
         when:
         gameService.hit(gameState, userId, roundId)
@@ -158,7 +158,7 @@ class GameServiceTestCase extends Specification {
         def bet = 10L
         Round round = new Round(status: RoundState.IN_PROGRESS)
         Deal dealMock = Spy(Deal, constructorArgs: [roundId, bet])
-        GameState gameStateMock = Mock(GameState, constructorArgs: [dealMock])
+        Table gameStateMock = Mock(Table, constructorArgs: [dealMock])
         gameLogicMock.dealerPlay(gameStateMock) >> {}
 
         when:

@@ -4,8 +4,11 @@ import com.apischanskyi.blackjack.Constants.HibernateConstants;
 import com.apischanskyi.blackjack.entity.CardLog;
 import com.apischanskyi.blackjack.entity.Round;
 import com.apischanskyi.blackjack.entity.User;
+import com.apischanskyi.blackjack.game.Table;
+import com.apischanskyi.blackjack.game.card.Deck;
 import org.hibernate.SessionFactory;
 import org.hsqldb.util.DatabaseManagerSwing;
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
@@ -28,6 +31,7 @@ import java.util.Properties;
 @ComponentScan("com.apischanskyi.blackjack")
 @EnableTransactionManagement
 @PropertySource(value = {"classpath:dev.application.properties"})
+@EnableAspectJAutoProxy
 public class DevAppConfig {
 
     @Autowired
@@ -77,6 +81,12 @@ public class DevAppConfig {
     @Bean
     public HibernateTransactionManager hibernateTransactionManager() throws IOException {
         return new HibernateTransactionManager(sessionFactory());
+    }
+
+    @Bean(name = "table")
+//    @Scope(value = "prototype")
+    public Table table(Long roundId, Long bet) {
+        return new Table(roundId, bet);
     }
 
 }
