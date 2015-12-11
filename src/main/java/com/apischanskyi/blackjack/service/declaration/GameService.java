@@ -16,20 +16,18 @@ public interface GameService {
     /**
      * Performs HIT action
      *
-     * @param table state of game
      * @param playerId instance ID of player
      * @param roundId instance ID of round
      * @return changed state of game after hitting
      */
-    Table hit(Table table, long playerId, long roundId);
+    Table hit(long playerId, long roundId);
 
     /**
      * Perform the STAND action
      *
-     * @param table state of game
      * @param playerId instance ID of player
      * @param roundId instance ID of round
      * @return changed state of game after standing
      */
-    Table stand(Table table, long playerId, long roundId);
+    Table stand(long playerId, long roundId);
 }

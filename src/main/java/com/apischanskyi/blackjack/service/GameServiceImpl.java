@@ -1,14 +1,12 @@
 package com.apischanskyi.blackjack.service;
 
-import com.apischanskyi.blackjack.exceptions.BlackJackExceptionHelper;
-import com.apischanskyi.blackjack.game.Table;
-import com.apischanskyi.blackjack.game.TableContainer;
-import com.apischanskyi.blackjack.game.logic.Dealer;
-import com.apischanskyi.blackjack.service.declaration.GameService;
 import com.apischanskyi.blackjack.data.declaration.RoundDao;
 import com.apischanskyi.blackjack.entity.Round;
+import com.apischanskyi.blackjack.exceptions.BlackJackExceptionHelper;
+import com.apischanskyi.blackjack.game.Table;
 import com.apischanskyi.blackjack.game.logic.GameLogic;
 import com.apischanskyi.blackjack.service.declaration.BetService;
+import com.apischanskyi.blackjack.service.declaration.GameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,15 +53,14 @@ public class GameServiceImpl implements GameService {
     /**
      * {@inheritDoc}
      */
-    public Table hit(Table table, long playerId, long roundId) {
+    public Table hit(long playerId, long roundId) {
         Round round = roundDao.getRound(roundId);
         logger.info("Cards during the round: [{}]", round.getCardLogs().size());
         if (round.getStatus() != RoundState.IN_PROGRESS) {
             logger.info("Game status is: {}", round.getStatus());
             throw BlackJackExceptionHelper.newBlackJackException(ErrorCode.HIT_IS_NOT_ALLOWED_HERE);
         }
-        Dealer dealer = new Dealer(table);
-        dealer.hitPlayer();
+        Table table = gameLogic.hit(playerId);
         if (gameLogic.isBoosted(table.getPlayerCards())) {
             applyRoundState(table, round, RoundState.BOOST, playerId);
         }
@@ -73,9 +70,9 @@ public class GameServiceImpl implements GameService {
     /**
      * {@inheritDoc}
      */
-    public Table stand(Table table, long playerId, long roundId) {
+    public Table stand(long playerId, long roundId) {
         Round round = roundDao.getRound(roundId);
-        gameLogic.dealerPlay(table);
+        Table table = gameLogic.dealerPlay(playerId);
         RoundState roundResult = gameLogic.judge(table);
         applyRoundState(table, round, roundResult, playerId);
         return table;

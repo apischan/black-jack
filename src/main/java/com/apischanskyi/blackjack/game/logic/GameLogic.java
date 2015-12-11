@@ -53,9 +53,10 @@ public class GameLogic {
     /**
      * Performs dealers actions
      *
-     * @param table state of game
+     * @param playerId instance ID of player
      */
-    public void dealerPlay(Table table) {
+    public Table dealerPlay(long playerId) {
+        Table table = tableContainer.getTable(playerId);
         int playerPoints = calculatePoints(table.getPlayerCards());
         int dealerPoints = calculatePoints(table.getDealerCards());
         Dealer dealer = new Dealer(table);
@@ -65,6 +66,7 @@ public class GameLogic {
             dealer.hitDealer();
             dealerPoints = calculatePoints(table.getDealerCards());
         }
+        return table;
     }
 
     /**
@@ -100,6 +102,13 @@ public class GameLogic {
         Table table = tableContainer.getTable(playerId);
         Dealer dealer = new Dealer(table);
         dealer.deal();
+        return table;
+    }
+
+    public Table hit(long playerId) {
+        Table table = tableContainer.getTable(playerId);
+        Dealer dealer = new Dealer(table);
+        dealer.hitPlayer();
         return table;
     }
 
