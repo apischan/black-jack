@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.apischanskyi.blackjack.Constants.SiteConstants;
+import static com.apischanskyi.blackjack.Constants.UrlKeyConstants.PLAYER_ID;
+import static com.apischanskyi.blackjack.Constants.UrlKeyConstants.ROUND_ID;
 
 @RestController
 @RequestMapping(value = SiteConstants.GAME_CONTROLLER_ROOT
@@ -24,20 +26,20 @@ public class GameController {
     private GameService gameService;
 
     @RequestMapping(value = SiteConstants.DEAL, method = RequestMethod.POST)
-    public Table deal(@PathVariable("playerId") long playerId, @PathVariable("roundId") long gameId) {
+    public Table deal(@PathVariable(PLAYER_ID) long playerId, @PathVariable(ROUND_ID) long gameId) {
         logger.info("Player id: {}; roundId: {}", playerId, gameId);
         Table table = gameService.deal(playerId, gameId);
         return table.hideDealerCard();
     }
     @RequestMapping(value = SiteConstants.HIT, method = RequestMethod.POST)
-    public Table hit(@PathVariable("playerId") long playerId, @PathVariable("roundId") long gameId) {
+    public Table hit(@PathVariable(PLAYER_ID) long playerId, @PathVariable(ROUND_ID) long gameId) {
         logger.info("Player id: {}; roundId: {}", playerId, gameId);
-        Table newTable = gameService.hit(playerId, gameId);
-        return newTable.hideDealerCard();
+        Table table = gameService.hit(playerId, gameId);
+        return table.hideDealerCard();
     }
 
     @RequestMapping(value = SiteConstants.STAND, method = RequestMethod.POST)
-    public Table stand(@PathVariable("playerId") long playerId, @PathVariable("roundId") long gameId) {
+    public Table stand(@PathVariable(PLAYER_ID) long playerId, @PathVariable(ROUND_ID) long gameId) {
         logger.info("Player id: {}; roundId: {}", playerId, gameId);
         return gameService.stand(playerId, gameId);
     }

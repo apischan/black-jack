@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import static com.apischanskyi.blackjack.Constants.UrlKeyConstants.ROUND_ID;
-import static com.apischanskyi.blackjack.Constants.UrlKeyConstants.USER_ID;
+import static com.apischanskyi.blackjack.Constants.UrlKeyConstants.PLAYER_ID;
 
 @RestController
 @RequestMapping(value = SiteConstants.BET_CONTROLLER_ROOT
@@ -23,14 +23,14 @@ public class BetController {
     private BetService betService;
 
     @RequestMapping(value = SiteConstants.BET, method = RequestMethod.POST)
-    public Long bet(@PathVariable(USER_ID) long playerId, @RequestBody Long amount) {
+    public Long bet(@PathVariable(PLAYER_ID) long playerId, @RequestBody Long amount) {
         logger.info("Input parameters: [{}, {}]", playerId, amount);
         return betService.bet(playerId, amount * 100);
     }
 
     @RequestMapping(value = SiteConstants.CANCEL_BET, method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.OK)
-    public void betCancel(@PathVariable(USER_ID) long playerId,
+    public void betCancel(@PathVariable(PLAYER_ID) long playerId,
                           @PathVariable(ROUND_ID) long roundId) {
         betService.cancelBet(roundId);
     }

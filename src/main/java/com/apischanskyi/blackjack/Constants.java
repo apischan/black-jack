@@ -19,7 +19,7 @@ public interface Constants {
     }
 
     interface UrlKeyConstants {
-        String USER_ID = "playerId";
+        String PLAYER_ID = "playerId";
         String ROUND_ID = "roundId";
     }
 
